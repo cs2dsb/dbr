@@ -6,6 +6,11 @@ import (
 	"time"
 )
 
+const (
+	//With timezone support
+	postgresTimeFormat = "2006-01-02 15:04:05.999999999-07:00"
+)
+
 type postgreSQL struct{}
 
 func (d postgreSQL) QuoteIdent(s string) string {
@@ -25,7 +30,7 @@ func (d postgreSQL) EncodeBool(b bool) string {
 }
 
 func (d postgreSQL) EncodeTime(t time.Time) string {
-	return MySQL.EncodeTime(t)
+	return `'` + t.UTC().Format(postgresTimeFormat) + `'`
 }
 
 func (d postgreSQL) EncodeBytes(b []byte) string {
